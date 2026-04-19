@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Express Chat</h1>
+        </div>
+        <div class="right">
+            <form action="/users/login" method="post">
+                <input name="username" type="text">
+                <input name="password" type="password">
+                <button type="submit"> LOGIN </button>
+            </form>
+
+            <form action="/users/register" method="post">
+                Username: <input name="username" type="text">
+                Pass: <input name="password" type="password">
+                Repeat pass: <input name="passwordSecond" type="password">
+                <button type="submit"> REGISTER </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

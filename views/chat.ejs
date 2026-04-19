@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Mix</title>
+    <link rel="stylesheet" href="/stylesheets/chat.css">
+    <script src="/scripts/chat.js" defer></script>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        Mix
+        <div>
+            <button onclick="toggleTheme()">🌙</button>
+            <button onclick="createChat()">＋</button>
+        </div>
+    </div>
+
+    <div class="chat-list" id="chatList"></div>
+</div>
+
+<div class="chat">
+    <div class="messages" id="messages"></div>
+
+    <div class="input-area">
+        <input id="input">
+        <button onclick="sendMessage()">➤</button>
+    </div>
+</div>
+</body>
+</html>
