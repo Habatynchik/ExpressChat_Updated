@@ -9,6 +9,7 @@ const usersRouter = require('./routes/users');
 const chatRouter = require('./routes/chat');
 const session = require("express-session");
 const messagesRouter = require('./routes/messages');
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 
@@ -32,6 +33,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(authMiddleware); // localhost:3000/
+
 
 app.use('/', indexRouter); // localhost:3000/
 app.use('/users', usersRouter); // localhost:3000/users
