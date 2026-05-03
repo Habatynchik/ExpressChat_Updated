@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const runQuery = require("../db/db-manager");
 
 const userService = {
     create: async (user) => {
@@ -7,19 +8,19 @@ const userService = {
             throw new Error("User already exists");
         }
 
-        let hashedPassword = bcrypt.hashSync(user.password, 10);
+        let hashedPassword =  bcrypt.hashSync(user.password, 10);
 
-        const result = await pool.query(`
+        const result = await runQuery(`
             insert into users (username, password)
             values ($1, $2)
         `, [user.username, hashedPassword])
-        return result.rows[0]
+        return await result.rows[0]
 
     },
     update: (id, user) => {
     },
     getUserByUsername: async (username) => {
-        let user = await pool.query(`
+        const user = await runQuery(`
             select *
             from users
             where username = $1

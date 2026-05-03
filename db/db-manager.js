@@ -3,12 +3,24 @@ require("dotenv").config();
 const {Pool} = require("pg");
 
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: 5432,
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    port: process.env.DATABASE_PORT,
     schema: "public"
 })
 
-module.exports = pool
+async function runQuery(query, params = []) {
+    const client = await pool.connect();
+    try {
+        return await client.query(query, params);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+module.exports = runQuery;

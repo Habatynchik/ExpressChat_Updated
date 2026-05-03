@@ -1,26 +1,29 @@
 const pool = require("../db/db-manager");
+const runQuery = require("../db/db-manager");
 
 let chatService = {
     create: async (name, imageUrl, owner) => {
         const createQuery = `
             INSERT INTO chats(name, image_url)
             VALUES ($1, $2)
+            RETURNING  *;
         `
 
-        const result = await pool.query(createQuery, [name, imageUrl])
-        const chatId = result.rows[0].id
+        const result = await runQuery(createQuery, [name, imageUrl])
+        const chatId = result.rows[0]
 
-        chatService.addMembers(chatId, [owner])
+        chatService.addMembers(chatId.id, [owner])
         return result.rows[0];
     },
     addMembers: (chatId, members) => {
         const addMembersQuery = `
             INSERT INTO chat_members (user_id, chat_id)
             VALUES ($1, $2)
+            RETURNING *;
         `;
 
         members.forEach((member) => {
-            pool.query(addMembersQuery, [member, chatId])
+            runQuery(addMembersQuery, [member, chatId])
         })
 
         return true;
@@ -33,7 +36,8 @@ let chatService = {
             WHERE cm.user_id = $1;
         `
 
-        return await pool.query(query, [userId]).rows
+        const result = await runQuery(query, [userId]);
+        return result.rows;
     },
     getById: (id) => {
 

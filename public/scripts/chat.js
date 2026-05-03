@@ -4,6 +4,23 @@ let theme = localStorage.getItem("theme") || "dark";
 
 if (theme === "light") document.body.classList.add("light");
 
+getAllChats();
+
+function getAllChats() {
+    fetch("/chat/all", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then(res => res.json())
+        .then(data => {
+            data.forEach(chat => {
+                chats.push({id: chat.id, name: chat.name, messages: []});
+            })
+            renderChats()
+        })
+}
+
 function save() {
 
 }
@@ -29,7 +46,6 @@ function createChat() {
     const name = prompt("Назва чату:");
     if (!name) return;
 
-    chats.push({ name, messages: [] });
 
     const data = {
         name: name,
@@ -39,11 +55,15 @@ function createChat() {
 
     fetch("/chat", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify(data),
-    })
-
-    save();
-    renderChats();
+    }).then(res => res.json())
+        .then(data => {
+            chats.push({id: data.id, name: data.name, messages: []});
+            renderChats()
+        })
 }
 
 function deleteChat(index) {
@@ -72,7 +92,7 @@ function sendMessage() {
     const input = document.getElementById("input");
     if (!input.value || currentChat === null) return;
 
-    const msg = { text: input.value, type: "me" };
+    const msg = {text: input.value, type: "me"};
     chats[currentChat].messages.push(msg);
 
     const div = document.createElement("div");
@@ -85,7 +105,7 @@ function sendMessage() {
     save();
 
     setTimeout(() => {
-        const reply = { text: "Ок 👍", type: "other" };
+        const reply = {text: "Ок 👍", type: "other"};
         chats[currentChat].messages.push(reply);
 
         const div2 = document.createElement("div");

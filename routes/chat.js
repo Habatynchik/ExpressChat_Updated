@@ -15,7 +15,9 @@ router.post("/", async (req, res) => {
     }
 
     chatService.create(name, imageUrl, userId)
-        .then(result => {res.status(200).json(result)})
+        .then(result => {
+            res.status(200).json(result)
+        })
         .catch(err => res.status(500).send(err))
 })
 
@@ -24,7 +26,9 @@ router.get("/all", async (req, res) => {
     let userId = req.session.user.id
 
     chatService.getAllByUserId(userId)
-        .then(result => {res.status(200).json(result)})
+        .then(result => {
+            res.status(200).json(result)
+        })
         .catch(err => res.status(500).send(err))
 })
 

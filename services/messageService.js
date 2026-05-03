@@ -1,4 +1,5 @@
 const pool = require("../db/db-manager");
+const runQuery = require("../db/db-manager");
 
 let messageService = {
     getAllByChatId: async (chatId) => {
@@ -10,7 +11,7 @@ let messageService = {
             ORDER BY messages.created ASC
         `;
         
-        const result = await pool.query(query, [chatId]);
+        const result = await runQuery(query, [chatId]);
         return result.rows;
     },
     deleteAllByChatId: async (chatId) => {
@@ -20,7 +21,7 @@ let messageService = {
             RETURNING id
         `;
 
-        const result = await pool.query(query, [chatId]);
+        const result = await runQuery(query, [chatId]);
         return result.rowCount;
     }
 };
