@@ -32,4 +32,21 @@ router.delete("/:chatId", async (req, res) => {
     }
 });
 
+router.post("/:chatId", async (req, res) => {
+    const userId = req.session?.user?.id
+    const chatId = req.params.chatId
+    const message = req.body.message;
+
+    if (!message || !chatId || !userId) {
+        res.status(400).json({error: "Incorrect data"});
+    }
+
+    try {
+        const message = await messageService.createMessage(chatId, message, userId);
+        res.status(200).json(message);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+})
+
 module.exports = router;

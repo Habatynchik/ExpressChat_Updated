@@ -34,10 +34,10 @@ function renderChats() {
         div.className = "chat-item";
         div.innerHTML = `
             ${chat.name}
-            <button onclick="deleteChat(${index});event.stopPropagation()">❌</button>
+            <button onclick="deleteChat(${chat.id});event.stopPropagation()">❌</button>
         `;
 
-        div.onclick = () => openChat(index);
+        div.onclick = () => openChat(chat.id);
         list.appendChild(div);
     });
 }
@@ -79,20 +79,38 @@ function openChat(index) {
     const messages = document.getElementById("messages");
     messages.innerHTML = "";
 
-    // TODO create fetch
-    chats[index].messages.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "message " + m.type;
-        div.textContent = m.text;
-        messages.appendChild(div);
-    });
+    fetch(`/messages/${currentChat}/all`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(res => res.json())
+        .then(data => {
+            const div = document.createElement("div");
+            div.className = "message";
+            div.textContent = data.username + ": " + data.text;
+            messages.appendChild(div);
+        })
 }
 
 function sendMessage() {
     const input = document.getElementById("input");
     if (!input.value || currentChat === null) return;
 
-    const msg = {text: input.value, type: "me"};
+    const msg = {message: input.value};
+
+    fetch(`/messages/${currentChat}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(msg),
+    }).then(res => res.json())
+        .then(data => {
+            alert(data)
+        })
+
+
     chats[currentChat].messages.push(msg);
 
     const div = document.createElement("div");

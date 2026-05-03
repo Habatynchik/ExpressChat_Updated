@@ -14,6 +14,15 @@ let messageService = {
         const result = await runQuery(query, [chatId]);
         return result.rows;
     },
+    createMessage: async (chatId, message, userId) => {
+        const query = `
+            INSERT INTO messages (user_id, chat_id, text, created)
+            VALUES ($1, $2, $3, now())
+            RETURNING *
+        `
+        const result = await runQuery(query, [userId, chatId, message]);
+        return result.rows[0];
+    },
     deleteAllByChatId: async (chatId) => {
         const query = `
             DELETE FROM messages
