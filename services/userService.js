@@ -8,7 +8,7 @@ const userService = {
             throw new Error("User already exists");
         }
 
-        let hashedPassword =  bcrypt.hashSync(user.password, 10);
+        let hashedPassword = bcrypt.hashSync(user.password, 10);
 
         const result = await runQuery(`
             insert into users (username, password)
@@ -43,7 +43,13 @@ const userService = {
     },
     getUser: (id) => {
     },
-    getAll: () => {
+    getAll: async () => {
+        const query = `
+            SELECT id, username, avatar_link
+            FROM users;
+        `
+        const result = await runQuery(query);
+        return result.rows;
     },
 }
 

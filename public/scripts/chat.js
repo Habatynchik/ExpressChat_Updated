@@ -6,6 +6,32 @@ if (theme === "light") document.body.classList.add("light");
 
 getAllChats();
 
+function addMember() {
+    const list = document.getElementsByClassName("chat-header")[0];
+    list.innerHTML = "";
+
+    fetch("users/all", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then((response) => {
+        return response.json()
+    })
+        .then(data => {
+            data.forEach(element => {
+                const div = document.createElement("div");
+                div.innerHTML = ` <button onclick="addToChat(${element.id})"> ${element.username} </button>`;
+                list.appendChild(div);
+            })
+        })
+}
+
+
+function addToChat(id) {
+
+}
+
 function getAllChats() {
     fetch("/chat/all", {
         method: "GET",
@@ -86,10 +112,12 @@ function openChat(index) {
         }
     }).then(res => res.json())
         .then(data => {
-            const div = document.createElement("div");
-            div.className = "message";
-            div.textContent = data.username + ": " + data.text;
-            messages.appendChild(div);
+            data.forEach(message => {
+                const div = document.createElement("div");
+                div.className = "message";
+                div.textContent = message.username + ": " + message.text;
+                messages.appendChild(div);
+            })
         })
 }
 
@@ -107,32 +135,12 @@ function sendMessage() {
         body: JSON.stringify(msg),
     }).then(res => res.json())
         .then(data => {
-            alert(data)
+            const messages = document.getElementById("messages");
+            const div = document.createElement("div");
+            div.className = "message";
+            div.textContent = data.username + ": " + data.text;
+            messages.appendChild(div);
         })
-
-
-    chats[currentChat].messages.push(msg);
-
-    const div = document.createElement("div");
-    div.className = "message me";
-    div.textContent = input.value;
-
-    document.getElementById("messages").appendChild(div);
-
-    input.value = "";
-    save();
-
-    setTimeout(() => {
-        const reply = {text: "Ок 👍", type: "other"};
-        chats[currentChat].messages.push(reply);
-
-        const div2 = document.createElement("div");
-        div2.className = "message other";
-        div2.textContent = reply.text;
-
-        document.getElementById("messages").appendChild(div2);
-        save();
-    }, 500);
 }
 
 function toggleTheme() {

@@ -35,4 +35,12 @@ router.post('/register', async function (req, res, next) {
         .catch(err => res.status(400).send(err.message));
 })
 
+router.get("/all", async function (req, res, next) {
+    userService.getAll()
+        .then(result => {
+            res.status(200).send(result);
+        })
+        .catch(err => res.status(400).send(err.message));
+})
+
 module.exports = router;

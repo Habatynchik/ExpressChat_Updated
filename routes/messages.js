@@ -42,8 +42,8 @@ router.post("/:chatId", async (req, res) => {
     }
 
     try {
-        const message = await messageService.createMessage(chatId, message, userId);
-        res.status(200).json(message);
+        const newMessage = await messageService.createMessage(chatId, message, userId);
+        res.status(200).json(newMessage);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
