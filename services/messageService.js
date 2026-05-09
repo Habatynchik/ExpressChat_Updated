@@ -1,5 +1,5 @@
 const pool = require("../db/db-manager");
-const runQuery = require("../db/db-manager");
+const {runQuery} = require("../db/db-manager");
 
 let messageService = {
     getAllByChatId: async (chatId) => {

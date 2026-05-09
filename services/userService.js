@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const runQuery = require("../db/db-manager");
+const {runQuery} = require("../db/db-manager");
 
 const userService = {
     create: async (user) => {

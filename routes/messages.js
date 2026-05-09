@@ -1,5 +1,6 @@
 const express = require('express');
 const messageService = require("../services/messageService");
+const chatService = require("../services/chatService");
 const router = express.Router();
 
 router.get("/:chatId/all", async (req, res) => {
@@ -31,6 +32,22 @@ router.delete("/:chatId", async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+
+router.post("/:chatId/add", async (req, res) => {
+    const chatId = req.params?.chatId
+    const users = req.body?.users;
+
+    if ( !users || !chatId) {
+        res.status(400).json({error: "Incorrect data"});
+    }
+
+    try {
+        chatService.addMembers(chatId, users);
+        res.status(200).json();
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+})
 
 router.post("/:chatId", async (req, res) => {
     const userId = req.session?.user?.id

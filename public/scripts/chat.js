@@ -29,7 +29,13 @@ function addMember() {
 
 
 function addToChat(id) {
-
+    fetch(`messages/${currentChat}/add`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({users: [id]})
+    })
 }
 
 function getAllChats() {

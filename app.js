@@ -3,24 +3,31 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const session = require("express-session");
+const pgSession = require('connect-pg-simple')(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const chatRouter = require('./routes/chat');
-const session = require("express-session");
 const messagesRouter = require('./routes/messages');
 const authMiddleware = require("./middlewares/authMiddleware");
+const {pool} = require("./db/db-manager");
 
 const app = express();
 
 
 app.use(session({
+    store: new pgSession({
+        pool: pool,
+        tableName: 'session',
+        createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         secure: false,
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 30 * 24 * 60 * 60 * 1000
     },
 }))
 
@@ -57,14 +64,14 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-    // get chat by id BY Viktor
+// get chat by id BY Viktor
 app.get('/chats/:id', (req, res) => {
-    const { id } = req.params;
+    const {id} = req.params;
     res.send(`Отримали чат з id = ${id}`);
-  });
-    // update chat by id BY Viktor
+});
+// update chat by id BY Viktor
 app.put('/chats/:id', (req, res) => {
-    const { id } = req.params;
+    const {id} = req.params;
     const data = req.body;
     res.send(`Оновили чат ${id} з даними: ${JSON.stringify(data)}`);
 });
